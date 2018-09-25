@@ -3,6 +3,7 @@ const request = require("request");
 const pokeapi = 'https://pokeapi.co/api/v2/pokemon';
 const pngLocation = '/images';
 
+
 // Get the references we will need
 const router = express.Router();
 
@@ -36,6 +37,19 @@ router.get('/', (req, res) => {
     });
 });
 
+router.get('/:id', (req, res) => {
+    console.log(`Sending a request to ${pokeapi}`);
+    request(pokeapi+"/"+req.params.id, function (err, response, body) {
+        if (err) {
+            throw err; // If we get an error then bail
+        }
+
+        // Use Express to send the JSON back to the client in the web response
+        let jsonResp = JSON.parse(body); // Pull out the JSON body so we can add 'image URL' and 'id' before returning to client
+        res.send(jsonResp);
+
+    });
+});
 
 // Export the routes
 module.exports = router;
